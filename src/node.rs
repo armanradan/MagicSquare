@@ -1,3 +1,4 @@
+use std::collections::vec_deque;
 use std::{collections::VecDeque, mem::zeroed};
 use ndarray::Array2;
 use ndarray::s;
@@ -6,7 +7,7 @@ use rand::Rng;
 pub struct Node {
     //pub square: Vec<Vec<u16>>,
     pub  square : Array2<u16>,
-    chances: Vec<u16>,
+  //  chances: Vec<u16>,
     pub size: u16,
     pub total_chance: u16,
     pub total_chance_history: u32,
@@ -15,10 +16,10 @@ pub struct Node {
 impl Node {
     pub fn new(size: u16) -> Node {
         let square = Array2::zeros((size as usize, size as usize));// vec![vec![0; size as usize]; size as usize];
-        let chances = vec![0; 2 * size as usize + 2];
+      //  let chances = vec![0; 2 * size as usize + 2];
         Node {
             square,
-            chances,
+     //       chances,
             size,
             total_chance: 0,
             total_chance_history:0,
@@ -30,7 +31,7 @@ impl Node {
        // let prev_total_chance = self.total_chance;
         if calculate
         {
-            let mut sum: u16;
+            let mut _sum: u16;
             let mut chance = 0;
             let magic_constant = (self.size * (self.size * self.size + 1)) / 2;
             // Calculate the sum of each row and column
@@ -80,9 +81,10 @@ impl Node {
         self.square[[i2,j2]] = temp;
         self.guess_chance(true);
         match insist {
-            InsistLevel::NoInsist => {
+            InsistLevel::KeepEqual => {
                     if prev_chance >= self.total_chance 
                     {
+                        //Revert
                         self.square[[i2,j2]] = self.square[[i1,j1]];
                         self.square[[i1,j1]] = temp;
                         self.total_chance = prev_chance;
@@ -92,10 +94,11 @@ impl Node {
                         self.total_chance_history = 0;
                     }
              },
-                InsistLevel::Equal => 
+                InsistLevel::ReplaceEqual => 
                 {
                     if prev_chance > self.total_chance 
                     {
+                        //Revert
                         self.square[[i2,j2]] = self.square[[i1,j1]];
                         self.square[[i1,j1]] = temp;
                         self.total_chance = prev_chance;
@@ -105,7 +108,7 @@ impl Node {
                         self.total_chance_history = 0;
                     }
                 },
-                InsistLevel::Any => 
+                InsistLevel::ReplaceAnyway => 
                 {
                     if self.total_chance > 100 {
                         self.total_chance_history -= 100;
@@ -113,8 +116,9 @@ impl Node {
                         self.total_chance_history = 0;
                     }
                 },
-                InsistLevel::DontCheck => 
+                InsistLevel::DontRplace => 
                 {
+                    //Revert
                     self.square[[i2,j2]] = self.square[[i1,j1]];
                     self.square[[i1,j1]] = temp;
                     self.total_chance = prev_chance;
@@ -149,7 +153,7 @@ impl Clone for Node {
         }
         Node {
             square,
-            chances: self.chances.clone(),
+       //     chances: self.chances.clone(),
             size: self.size,
             total_chance: self.total_chance,
             total_chance_history: self.total_chance_history.clone(),
@@ -171,9 +175,10 @@ impl std::cmp::Ord for Node {
 
 impl std::cmp::Eq for Node {}
 
+#[allow(dead_code)]
 pub enum InsistLevel {
-    NoInsist,
-    Equal,
-    Any,
-    DontCheck
+    KeepEqual,
+    ReplaceEqual,
+    ReplaceAnyway,
+    DontRplace
 }

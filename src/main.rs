@@ -2,8 +2,8 @@ mod node;
 use std::sync::Arc;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering;
-use std::thread::sleep;
-use std::time::Duration;
+// use std::thread::sleep;
+// use std::time::Duration;
 use std::time::Instant;
 use rand::Rng;
 use std::io;
@@ -44,17 +44,18 @@ fn main() {
             
             let should_insist: InsistLevel = {
                 
-                if sq.total_chance_history >  ( size.pow(4) * (chance_percent as u32 + size) * 10 ) 
+                if (sq.total_chance_history) >  (chance_percent as u32 + size.pow(3)) 
                 {
-                    if sq.total_chance_history % 2 == 0 {
-                        InsistLevel::DontCheck
-                    } 
-                    else {
-                        InsistLevel::Any
-                    }
+                    //print!("shaked!");
+                    InsistLevel::ReplaceAnyway
                 } 
-                else {
-                    InsistLevel::Equal
+                else if sq.total_chance_history < chance_percent as u32
+                {
+                    InsistLevel::KeepEqual
+                }
+                else 
+                {
+                    InsistLevel::ReplaceEqual
                 }
             };
             sq.swap_two_random_elements(should_insist);
@@ -65,11 +66,11 @@ fn main() {
     let elapsed = start.elapsed();
     println!("Elapsed time: {:?}", elapsed.as_secs());
     //pause execution
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).expect("Failed to read input");
+    // let mut input = String::new();
+    // io::stdin().read_line(&mut input).expect("Failed to read input");
 }
 
-fn fill_squares(squares: &mut Vec<Node>, size: u16, node_count: u16) {
+fn fill_squares(squares: &mut Vec<Node>, size: u16, node_count: u16) { 
     let mut rng = rand::thread_rng();
     for _i in 0..node_count {
         let mut node: Node = Node::new(size);
@@ -92,6 +93,7 @@ fn fill_squares(squares: &mut Vec<Node>, size: u16, node_count: u16) {
 }
 
 fn show_square(node: &Node) {
+    println!();
     for k in 0..node.size {
         for j in 0..node.size {
             print!("{:<4}", node.square[[k as usize,j as usize]]);
