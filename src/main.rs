@@ -18,7 +18,7 @@ fn main() {
     let found = Arc::new(AtomicBool::new(false));
     let start = Instant::now();
 
-    const NUM_THREADS: u16 = 4;
+    const NUM_THREADS: u16 = 3;
     rayon::ThreadPoolBuilder::new().num_threads(NUM_THREADS as usize).build_global().unwrap();
     
     println!("Enter the size of the square:");
@@ -64,7 +64,7 @@ fn main() {
 
 
     let elapsed = start.elapsed();
-    println!("Elapsed time: {:?}", elapsed.as_secs());
+    println!("Elapsed time: {:?} Seconds", elapsed.as_secs());
     //pause execution
     // let mut input = String::new();
     // io::stdin().read_line(&mut input).expect("Failed to read input");

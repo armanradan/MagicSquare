@@ -1,5 +1,3 @@
-use std::collections::vec_deque;
-use std::{collections::VecDeque, mem::zeroed};
 use ndarray::Array2;
 use ndarray::s;
 use rand::Rng;
@@ -110,6 +108,7 @@ impl Node {
                 },
                 InsistLevel::ReplaceAnyway => 
                 {
+                    //Reset history, but allow more changes if history is too long
                     if self.total_chance > 100 {
                         self.total_chance_history -= 100;
                     } else {
