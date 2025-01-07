@@ -115,7 +115,7 @@ impl Node {
                         self.total_chance_history = 0;
                     }
                 },
-                InsistLevel::DontRplace => 
+                InsistLevel::DontReplace =>
                 {
                     //Revert
                     self.square[[i2,j2]] = self.square[[i1,j1]];
@@ -179,5 +179,5 @@ pub enum InsistLevel {
     KeepEqual,
     ReplaceEqual,
     ReplaceAnyway,
-    DontRplace
+    DontReplace
 }

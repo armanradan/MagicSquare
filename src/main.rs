@@ -46,7 +46,7 @@ fn main() {
                 
                 if (sq.total_chance_history) >  (chance_percent as u32 + size.pow(3)) 
                 {
-                    //print!("shaked!");
+                    //print!("shook!");
                     InsistLevel::ReplaceAnyway
                 } 
                 else if sq.total_chance_history < chance_percent as u32
