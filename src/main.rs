@@ -71,14 +71,14 @@ fn main() {
 }
 
 fn fill_squares(squares: &mut Vec<Node>, size: u16, node_count: u16) { 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     for _i in 0..node_count {
         let mut node: Node = Node::new(size);
         let mut buffer: HashSet<u16> = HashSet::new();
         for k in 0..size {
             for j in 0..size {
                 loop {
-                    let rand_num: u16 = rng.gen_range(1..= size * size);
+                    let rand_num: u16 = rng.random_range(1..= size * size);
                     if !buffer.contains(&rand_num) {
                         node.square[[k as usize,j as usize]] = rand_num;
                         buffer.insert(rand_num);
