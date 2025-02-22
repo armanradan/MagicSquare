@@ -96,9 +96,14 @@ fn show_square(node: &Node) {
     println!();
     for k in 0..node.size {
         for j in 0..node.size {
-            print!("{:<4}", node.square[[k as usize,j as usize]]);
+            print!("{:<4}| ", node.square[[k as usize,j as usize]]);
         }
         println!();
+        for _ in 0..node.size {
+            print!("- - - ");
+        }
+        println!();
+
     }
     println!();
 }
